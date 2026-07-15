@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Kawaii Aqua Pets Admin</title>
+  <link rel="stylesheet" href="app.css">
+</head>
+<body class="admin">
+<main class="wrap">
+  <section id="login" class="panel login">
+    <img id="adminLoginLogo" src="assets/logo.png" alt="Kawaii Aqua Pets logo">
+    <h1>Kawaii Aqua Pets Admin</h1>
+    <form id="loginForm">
+      <input id="pass" type="password" placeholder="Admin passcode" required>
+      <button class="btn">Open Dashboard</button>
+      <p id="loginMsg"></p>
+    </form>
+  </section>
+
+  <section id="dash" class="hide">
+    <div class="top">
+      <div class="adminBrand">
+        <img id="adminTopLogo" src="assets/logo.png" alt="Store logo">
+        <div><h1 id="adminStoreName">Kawaii Aqua Pets</h1><small>Admin Dashboard</small></div>
+      </div>
+      <div class="adminTopActions">
+        <div class="adminRefreshMeta">
+          <span>Auto refresh: every 15 seconds</span>
+          <small id="lastRefreshText">Waiting for first update...</small>
+        </div>
+        <button type="button" class="btn secondary refreshDataBtn" id="refreshDataBtn">↻ Refresh Data</button>
+        <a href="index.html" target="_blank" class="btn secondary">View Store</a>
+      </div>
+    </div>
+
+    <nav class="tabs">
+      <button data-tab="settings">Settings</button>
+      <button data-tab="categories">Categories</button>
+      <button data-tab="products">Products</button>
+      <button data-tab="orders">Orders <span id="newOrdersBadge" class="newDataBadge hide">0</span></button>
+      <button data-tab="reviews">Reviews <span id="newReviewsBadge" class="newDataBadge hide">0</span></button>
+    </nav>
+
+    <section id="settings" class="panel tabPanel">
+      <h2>Website Settings</h2>
+      <form id="settingsForm">
+        <div class="imagePreviewWrap"><img id="logoPreview" src="assets/logo.png" alt="Logo preview"></div>
+        <input name="siteName" placeholder="Website name">
+        <input name="tagline" placeholder="Tagline">
+
+        <div class="settingsDivider">
+          <h3>Payment Settings</h3>
+          <p class="muted">Customers can choose GCash or UnionBank and download the QR if they only have one phone. QR uploads are saved without image recompression.</p>
+        </div>
+
+        <div class="paymentAdminGrid">
+          <div class="paymentAdminCard">
+            <h3>GCash</h3>
+            <div class="paymentQrPreview"><img id="gcashQrPreview" src="assets/gcash-qr.jpg" alt="GCash QR preview"></div>
+            <input name="gcashName" placeholder="GCash account name">
+            <input name="gcashNumber" placeholder="GCash mobile / account hint (optional)">
+            <label>New GCash QR <span class="optional">(leave blank to keep current)</span>
+              <input name="gcashQrFile" type="file" accept="image/*">
+            </label>
+          </div>
+
+          <div class="paymentAdminCard">
+            <h3>UnionBank</h3>
+            <div class="paymentQrPreview"><img id="unionBankQrPreview" src="assets/unionbank-qr.jpeg" alt="UnionBank QR preview"></div>
+            <input name="unionBankName" placeholder="UnionBank account name">
+            <input name="unionBankAccountHint" placeholder="Account hint, e.g. **** **** 6628">
+            <label>New UnionBank QR <span class="optional">(leave blank to keep current)</span>
+              <input name="unionBankQrFile" type="file" accept="image/*">
+            </label>
+          </div>
+        </div>
+
+        <textarea name="paymentNote" placeholder="Payment instruction"></textarea>
+
+        <div class="settingsDivider">
+          <h3>Delivery Settings</h3>
+          <p class="muted">The Lalamove form link is shown to customers who select Lalamove.</p>
+        </div>
+
+        <label>Lalamove delivery form URL
+          <input name="lalamoveFormUrl" type="url" placeholder="https://delivery.lalamove.com/forms/...">
+        </label>
+
+        <div class="settingsDivider">
+          <h3>Sender Details for LBC Print View</h3>
+          <p class="muted">These are shown when you print LBC shipping details from an order.</p>
+        </div>
+
+        <input name="senderName" placeholder="Sender full name">
+        <input name="senderMobile" placeholder="Sender mobile number">
+        <textarea name="senderAddress" placeholder="Sender / return address"></textarea>
+
+        <div class="settingsDivider">
+          <h3>Social Media & Seller Chat</h3>
+          <p class="muted">Leave a field blank to hide that social button on the customer website. The Facebook link is also used by the Chat to Seller and order-to-seller buttons.</p>
+        </div>
+
+        <label>Facebook Page URL
+          <input name="facebookPageUrl" type="url" placeholder="https://www.facebook.com/yourpage">
+        </label>
+
+        <label>TikTok URL
+          <input name="tiktokUrl" type="url" placeholder="https://www.tiktok.com/@yourusername">
+        </label>
+
+        <label>YouTube Channel URL
+          <input name="youtubeUrl" type="url" placeholder="https://www.youtube.com/@yourchannel">
+        </label>
+
+        <label>New logo <span class="optional">(leave blank to keep current)</span>
+          <input name="logoFile" type="file" accept="image/*">
+        </label>
+        <button class="btn">Save Settings</button>
+        <p id="settingsMsg"></p>
+      </form>
+    </section>
+
+    <section id="categories" class="panel tabPanel hide">
+      <h2>Categories</h2>
+      <form id="catForm">
+        <input type="hidden" name="id">
+        <input name="name" placeholder="Category name" required>
+        <button class="btn">Save Category</button>
+      </form>
+      <div id="catList"></div>
+    </section>
+
+    <section id="products" class="panel tabPanel hide">
+      <h2>Products</h2>
+      <form id="prodForm">
+        <input type="hidden" name="id">
+        <div class="imagePreviewWrap productPreview"><img id="productPreview" src="assets/logo.png" alt="Product image preview"></div>
+        <input name="name" placeholder="Product name" required>
+        <select name="categoryId" required></select>
+        <input name="price" type="number" min="0" step="0.01" placeholder="Price" required>
+        <input name="stock" type="number" min="0" step="1" placeholder="Stock" value="1" required>
+        <textarea name="description" placeholder="Description"></textarea>
+        <label>Product image <span class="optional">(leave blank when editing to keep current)</span>
+          <input name="imageFile" type="file" accept="image/*">
+        </label>
+        <label class="checkLabel"><input name="active" type="checkbox" checked> Show on store</label>
+        <div class="actions">
+          <button class="btn" type="submit">Save Product</button>
+          <button class="btn secondary" type="button" id="cancelProductEdit">Clear Form</button>
+        </div>
+        <p id="prodMsg"></p>
+      </form>
+      <div id="prodList" class="grid"></div>
+    </section>
+
+    <section id="orders" class="panel tabPanel hide">
+      <div class="ordersHead">
+        <div>
+          <h2>Orders</h2>
+          <p class="muted">Approve payment to deduct stock and email the receipt. Then update the order through Preparing, Ready, Shipped, and Completed. Save the LBC tracking number or Lalamove share link before marking the order Shipped so the customer can see it in Track Order and receive it in the shipping email.</p>
+        </div>
+      </div>
+      <div class="tableWrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Customer</th>
+              <th>Delivery</th>
+              <th>Order</th>
+              <th>Total</th>
+              <th>Payment</th>
+              <th>Status</th>
+              <th>Shipping Details</th>
+            </tr>
+          </thead>
+          <tbody id="ordersBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="reviews" class="panel tabPanel hide">
+      <div class="reviewAdminHead">
+        <div>
+          <h2>Customer Reviews</h2>
+          <p>Customer review photos use the same permanent Google Drive image system.</p>
+        </div>
+      </div>
+      <div id="adminReviewsGrid" class="adminReviewsGrid"></div>
+    </section>
+  </section>
+</main>
+
+<div id="adminDataToast" class="adminDataToast" role="status" aria-live="polite">
+  <div class="adminDataToastIcon">↻</div>
+  <div class="adminDataToastCopy">
+    <b id="adminDataToastTitle">Data refreshed</b>
+    <span id="adminDataToastText">Admin data is up to date.</span>
+  </div>
+  <button type="button" id="closeAdminDataToast" aria-label="Close notification">×</button>
+</div>
+
+<dialog id="deliveryDlg" class="deliveryAdminDialog">
+  <div class="deliveryAdminContent">
+    <button type="button" id="closeDeliveryDlg" class="x">×</button>
+    <h2 id="deliveryDlgTitle">Shipping Details</h2>
+    <div id="deliveryDetailContent"></div>
+
+    <section id="trackingAdminPanel" class="trackingAdminPanel">
+      <div>
+        <h3>Customer Order Tracking</h3>
+        <p id="trackingAdminHelp" class="muted"></p>
+      </div>
+      <label id="trackingNumberLabel">Tracking number
+        <input id="trackingNumberInput" autocomplete="off">
+      </label>
+      <label id="trackingUrlLabel">Tracking / share link <span class="optional">(optional)</span>
+        <input id="trackingUrlInput" type="url" placeholder="https://...">
+      </label>
+      <button type="button" class="btn" id="saveTrackingBtn">Save Tracking Details</button>
+      <p id="trackingSaveMsg"></p>
+    </section>
+
+    <div class="actions deliveryDialogActions">
+      <button type="button" class="btn secondary" id="copyDeliveryBtn">Copy Details</button>
+      <button type="button" class="btn" id="printDeliveryBtn">Print LBC Details</button>
+    </div>
+    <p id="deliveryActionMsg"></p>
+  </div>
+</dialog>
+
+<script src="config.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
