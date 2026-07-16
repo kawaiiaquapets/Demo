@@ -293,3 +293,16 @@ body:not(.admin) form.isSubmitting{cursor:wait}body:not(.admin) form.isSubmittin
   .productGrid{grid-template-columns:1fr 1fr!important}.productMedia{height:145px}#grid .productCardBody h3{font-size:13px}.productPriceRow{align-items:flex-start;flex-direction:column;gap:3px}
   .footerGrid{grid-template-columns:1fr}
 }
+
+/* v9.1 Mobile cart close-button fix */
+body:not(.admin) .overlay{z-index:90}
+body:not(.admin) .cart{z-index:100}
+body:not(.admin) .cartHead{position:sticky;top:0;z-index:3;align-items:center;min-height:72px;background:#fff;border-bottom:1px solid #dbeaf2}
+body:not(.admin) .cartHead h2{margin:0;color:#12355f}
+body:not(.admin) #closeCart{display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;padding:0;border:0;border-radius:50%;background:#eef8fc;color:#12355f;font-size:34px;line-height:1;cursor:pointer}
+body:not(.admin) #closeCart:active{transform:scale(.96)}
+@media(max-width:760px){
+  body:not(.admin) .cart{width:100%;max-width:none;height:100dvh}
+  body:not(.admin) .cartHead{padding:14px 16px;min-height:72px}
+  body:not(.admin) .cartHead h2{font-size:21px}
+}
